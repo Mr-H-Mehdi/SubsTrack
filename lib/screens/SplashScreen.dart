@@ -3,7 +3,7 @@ import 'package:labs/screens/LoginScreen.dart';
 import 'package:labs/screens/SignupScreen.dart';
 
 class Splashscreen extends StatefulWidget {
-  const Splashscreen({super.key});
+  const Splashscreen({super.key, required Null Function() onAnimationComplete});
 
   @override
   State<Splashscreen> createState() => _SplashscreenState();

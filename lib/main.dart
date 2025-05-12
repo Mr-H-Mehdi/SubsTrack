@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'firebase_options.dart';
+
 import 'package:labs/screens/AIBotScreen.dart';
 import 'package:labs/screens/CalendarScreen.dart';
 import 'package:labs/screens/HomeScreen.dart';
@@ -9,40 +13,13 @@ import 'package:labs/screens/SignupScreen.dart';
 import 'package:labs/screens/SplashScreen.dart';
 import 'package:labs/screens/CardPaymentScreen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
-
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'SubsTrack',
-//       theme: ThemeData(
-//         useMaterial3: true,
-//         colorScheme: ColorScheme.fromSeed(
-//           seedColor: Colors.blue,
-//           brightness: Brightness.dark,
-//         ),
-//       ),
-//       initialRoute: '/',
-//       routes: {
-//         '/': (context) => const Scaffold(
-//               backgroundColor: Colors.black,
-//               body: SafeArea(
-//                 child: Splashscreen(),
-//               ),
-//             ),
-//         '/login': (context) => const LoginScreen(),
-//         '/signup': (context) => const SignUpScreen(),
-//         '/profile': (context) => const ProfileScreen(),
-//       },
-//       debugShowCheckedModeBanner: false,
-//     );
-//   }
-// }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -61,7 +38,33 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Poppins',
         useMaterial3: true,
       ),
-      home: const MainNavigationScreen(),
+      home: const AuthWrapper(),
+    );
+  }
+}
+
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Splashscreen(
+            onAnimationComplete: (){},
+          );
+        }
+
+        if (snapshot.hasData) {
+          return const MainNavigationScreen();
+        }
+
+        return Splashscreen(
+          onAnimationComplete: (){},
+        );
+      },
     );
   }
 }
@@ -75,7 +78,7 @@ class MainNavigationScreen extends StatefulWidget {
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _selectedIndex = 0;
-  
+
   static final List<Widget> _widgetOptions = <Widget>[
     const HomeScreen(),
     const CalendarScreen(),
@@ -93,13 +96,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.black,
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.black,
-        
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

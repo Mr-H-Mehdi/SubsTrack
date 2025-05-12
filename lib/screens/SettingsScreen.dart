@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:labs/models/UserData.dart';
 import 'dart:math' as math;
@@ -145,9 +146,9 @@ class _SettingsScreenState extends State<SettingsScreen>
                 );
               },
             ),
-            
+
             const SizedBox(height: 30),
-            
+
             // Personal Information Section
             _buildSettingsSection(
               context,
@@ -176,9 +177,9 @@ class _SettingsScreenState extends State<SettingsScreen>
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // General Settings
             _buildSettingsSection(
               context,
@@ -207,9 +208,9 @@ class _SettingsScreenState extends State<SettingsScreen>
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // Subscription Settings
             _buildSettingsSection(
               context,
@@ -238,9 +239,9 @@ class _SettingsScreenState extends State<SettingsScreen>
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // Appearance Settings
             _buildSettingsSection(
               context,
@@ -262,9 +263,9 @@ class _SettingsScreenState extends State<SettingsScreen>
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // About & Help
             _buildSettingsSection(
               context,
@@ -293,16 +294,29 @@ class _SettingsScreenState extends State<SettingsScreen>
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 40),
-            
+
             // Logout Button
             SizedBox(
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
-                onPressed: () {
-                  // Logout logic
+                onPressed: () async {
+                  try {
+                    await FirebaseAuth.instance.signOut();
+
+                    print('User signed out');
+                    // You can navigate the user to a login screen or show a message
+                    Navigator.pushReplacementNamed(context, '/login');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Logged out successfully'),
+                      ),
+                    );
+                  } catch (e) {
+                    print('Error signing out: $e');
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
@@ -320,7 +334,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 20),
           ],
         ),
@@ -401,11 +415,12 @@ class _SettingsScreenState extends State<SettingsScreen>
               ),
             ),
             const Spacer(),
-            trailing ?? const Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: Colors.grey,
-            ),
+            trailing ??
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: Colors.grey,
+                ),
           ],
         ),
       ),

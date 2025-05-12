@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:labs/screens/LoginScreen.dart';
 import 'package:labs/screens/ProfileScreen.dart';
@@ -10,39 +11,41 @@ class SignUpScreen extends StatefulWidget {
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> with SingleTickerProviderStateMixin {
+class _SignUpScreenState extends State<SignUpScreen>
+    with SingleTickerProviderStateMixin {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   String _emailError = '';
   String _passwordError = '';
   String _confirmPasswordError = '';
-  
+
   // Animation controller
   late AnimationController _controller;
   late Animation<double> _fadeInAnimation;
   late Animation<Offset> _slideAnimation;
-  
+
   // Additional animations for form elements
   late List<Animation<Offset>> _formFieldAnimations;
 
   @override
   void initState() {
     super.initState();
-    
+
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-    
+
     _fadeInAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
         curve: const Interval(0.0, 0.6, curve: Curves.easeIn),
       ),
     );
-    
+
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
       end: Offset.zero,
@@ -52,7 +55,7 @@ class _SignUpScreenState extends State<SignUpScreen> with SingleTickerProviderSt
         curve: const Interval(0.2, 0.7, curve: Curves.easeOut),
       ),
     );
-    
+
     // Animations for form fields with staggered effect
     _formFieldAnimations = List.generate(
       3,
@@ -70,7 +73,7 @@ class _SignUpScreenState extends State<SignUpScreen> with SingleTickerProviderSt
         ),
       ),
     );
-    
+
     _controller.forward();
   }
 
@@ -84,7 +87,7 @@ class _SignUpScreenState extends State<SignUpScreen> with SingleTickerProviderSt
   }
 
   // Function to validate the sign-up form
-  void _submitForm() {
+  Future<void> _submitForm() async {
     setState(() {
       _emailError = '';
       _passwordError = '';
@@ -143,49 +146,31 @@ class _SignUpScreenState extends State<SignUpScreen> with SingleTickerProviderSt
     }
 
     if (isValid) {
-      // Create bounce animation effect on successful validation
-      _animateButtonSuccess();
-      
-      // Navigate to profile screen with user data after animation completes
-      Future.delayed(const Duration(milliseconds: 600), () {
-        Navigator.of(context).push(
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return ProfileScreen(
-                userData: UserData(
-                  name: "Mr. John Smith",
-                  email: email,
-                  phone: "+923456789012",
-                  address: "Beruni Hostel NUST, Sector-H12, Islamabad Pk.",
-                  biometric: false,
-                  imageName: "assets/images/ManPic.jpeg",
-                ),
-              );
-            },
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              // Hero-like transition
-              return FadeTransition(
-                opacity: animation,
-                child: ScaleTransition(
-                  scale: Tween<double>(begin: 0.95, end: 1.0).animate(animation),
-                  child: child,
-                ),
-              );
-            },
-            transitionDuration: const Duration(milliseconds: 500),
-          ),
-        );
-      });
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(email: email, password: password);
+        print("User registered: ${userCredential.user?.uid}");
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          print('The password provided is too weak.');
+        } else if (e.code == 'email-already-in-use') {
+          print('The account already exists for that email.');
+        } else {
+          print('Error: ${e.message}');
+        }
+      } catch (e) {
+        print(e);
+      }
     }
   }
-  
+
   void _animateButtonSuccess() {
     // Create a button press animation effect
     AnimationController buttonController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     buttonController.forward().then((_) {
       buttonController.reverse().then((_) {
         buttonController.dispose();
@@ -244,7 +229,9 @@ class _SignUpScreenState extends State<SignUpScreen> with SingleTickerProviderSt
                         borderRadius: BorderRadius.circular(5),
                         boxShadow: [
                           BoxShadow(
-                            color: _emailError.isNotEmpty ? Colors.red.withOpacity(0.3) : Colors.transparent,
+                            color: _emailError.isNotEmpty
+                                ? Colors.red.withOpacity(0.3)
+                                : Colors.transparent,
                             blurRadius: 8,
                             spreadRadius: 1,
                           ),
@@ -277,7 +264,9 @@ class _SignUpScreenState extends State<SignUpScreen> with SingleTickerProviderSt
                         borderRadius: BorderRadius.circular(5),
                         boxShadow: [
                           BoxShadow(
-                            color: _passwordError.isNotEmpty ? Colors.red.withOpacity(0.3) : Colors.transparent,
+                            color: _passwordError.isNotEmpty
+                                ? Colors.red.withOpacity(0.3)
+                                : Colors.transparent,
                             blurRadius: 8,
                             spreadRadius: 1,
                           ),
@@ -294,7 +283,8 @@ class _SignUpScreenState extends State<SignUpScreen> with SingleTickerProviderSt
                             style: TextStyle(color: Colors.grey),
                           ),
                           prefixIcon: const Icon(Icons.lock),
-                          errorText: _passwordError.isEmpty ? null : _passwordError,
+                          errorText:
+                              _passwordError.isEmpty ? null : _passwordError,
                         ),
                       ),
                     ),
@@ -310,7 +300,9 @@ class _SignUpScreenState extends State<SignUpScreen> with SingleTickerProviderSt
                         borderRadius: BorderRadius.circular(5),
                         boxShadow: [
                           BoxShadow(
-                            color: _confirmPasswordError.isNotEmpty ? Colors.red.withOpacity(0.3) : Colors.transparent,
+                            color: _confirmPasswordError.isNotEmpty
+                                ? Colors.red.withOpacity(0.3)
+                                : Colors.transparent,
                             blurRadius: 8,
                             spreadRadius: 1,
                           ),
@@ -327,7 +319,9 @@ class _SignUpScreenState extends State<SignUpScreen> with SingleTickerProviderSt
                             style: TextStyle(color: Colors.grey),
                           ),
                           prefixIcon: const Icon(Icons.lock),
-                          errorText: _confirmPasswordError.isEmpty ? null : _confirmPasswordError,
+                          errorText: _confirmPasswordError.isEmpty
+                              ? null
+                              : _confirmPasswordError,
                         ),
                       ),
                     ),
@@ -378,8 +372,11 @@ class _SignUpScreenState extends State<SignUpScreen> with SingleTickerProviderSt
                       onPressed: () {
                         Navigator.of(context).push(
                           PageRouteBuilder(
-                            pageBuilder: (context, animation, secondaryAnimation) => const LoginScreen(),
-                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) =>
+                                    const LoginScreen(),
+                            transitionsBuilder: (context, animation,
+                                secondaryAnimation, child) {
                               return SlideTransition(
                                 position: Tween<Offset>(
                                   begin: const Offset(0.0, 1.0),
@@ -388,7 +385,8 @@ class _SignUpScreenState extends State<SignUpScreen> with SingleTickerProviderSt
                                 child: child,
                               );
                             },
-                            transitionDuration: const Duration(milliseconds: 500),
+                            transitionDuration:
+                                const Duration(milliseconds: 500),
                           ),
                         );
                       },
