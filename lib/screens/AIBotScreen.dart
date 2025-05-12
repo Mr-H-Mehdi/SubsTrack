@@ -22,24 +22,14 @@ class _AIBotScreenState extends State<AIBotScreen> {
   void _handleSubmitted(String text) {
     _messageController.clear();
     setState(() {
-      _messages.add(
-        ChatMessage(
-          text: text,
-          isUser: true,
-        ),
-      );
+      _messages.add(ChatMessage(text: text, isUser: true));
     });
 
     // Simulate AI response after a short delay
     Future.delayed(const Duration(milliseconds: 800), () {
       if (mounted) {
         setState(() {
-          _messages.add(
-            ChatMessage(
-              text: _getAIResponse(text),
-              isUser: false,
-            ),
-          );
+          _messages.add(ChatMessage(text: _getAIResponse(text), isUser: false));
         });
       }
     });
@@ -65,7 +55,10 @@ class _AIBotScreenState extends State<AIBotScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.settings, color: Colors.white), // Change icon color to white
+          icon: const Icon(
+            Icons.settings,
+            color: Colors.white,
+          ), // Change icon color to white
           onPressed: () {
             Navigator.push(
               context,
@@ -75,7 +68,10 @@ class _AIBotScreenState extends State<AIBotScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white), // Change icon color to white
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ), // Change icon color to white
             onPressed: () {
               if (_showCustomChat) {
                 setState(() {
@@ -94,9 +90,7 @@ class _AIBotScreenState extends State<AIBotScreen> {
         ),
         centerTitle: true,
       ),
-      body: _showCustomChat
-          ? _buildChatInterface()
-          : _buildPresetQuestions(),
+      body: _showCustomChat ? _buildChatInterface() : _buildPresetQuestions(),
     );
   }
 
@@ -104,7 +98,7 @@ class _AIBotScreenState extends State<AIBotScreen> {
     return Column(
       children: [
         const SizedBox(height: 20),
-        
+
         // AI Bot Icon
         Container(
           width: 80,
@@ -116,12 +110,14 @@ class _AIBotScreenState extends State<AIBotScreen> {
           child: Icon(
             Icons.smart_toy,
             size: 40,
-            color: Theme.of(context).colorScheme.primary, // Change icon color to white
+            color: Theme.of(
+              context,
+            ).colorScheme.primary, // Change icon color to white
           ),
         ),
-        
+
         const SizedBox(height: 10),
-        
+
         const Text(
           'How can I help you?',
           style: TextStyle(
@@ -130,41 +126,38 @@ class _AIBotScreenState extends State<AIBotScreen> {
             color: Colors.white, // Set text color to white
           ),
         ),
-        
+
         const SizedBox(height: 5),
-        
+
         Text(
           'Ask me anything about your subscriptions',
           style: TextStyle(
             color: Colors.grey[400], // Adjust text color for dark theme
           ),
         ),
-        
+
         const SizedBox(height: 40),
-        
+
         // Preset questions
         _buildPresetQuestionButton(
           'What\'s my total subscription cost this month?',
           Icons.paid,
         ),
-        
+
         _buildPresetQuestionButton(
           'Which subscription costs me the most?',
           Icons.trending_up,
         ),
-        
+
         _buildPresetQuestionButton(
           'How can I save money on my subscriptions?',
           Icons.savings,
         ),
-        
-        _buildPresetQuestionButton(
-          'When is my next payment due?',
-          Icons.event,
-        ),
-        
+
+        _buildPresetQuestionButton('When is my next payment due?', Icons.event),
+
         const Spacer(),
-        
+
         // Custom chat button
         Padding(
           padding: const EdgeInsets.all(20),
@@ -178,7 +171,9 @@ class _AIBotScreenState extends State<AIBotScreen> {
                 });
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary, // Change button color
+                backgroundColor: Theme.of(
+                  context,
+                ).colorScheme.primary, // Change button color
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -186,10 +181,7 @@ class _AIBotScreenState extends State<AIBotScreen> {
               ),
               child: const Text(
                 'Start Custom Chat',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -206,7 +198,7 @@ class _AIBotScreenState extends State<AIBotScreen> {
           setState(() {
             _showCustomChat = true;
           });
-          
+
           // Add a small delay before sending the message
           Future.delayed(const Duration(milliseconds: 300), () {
             _handleSubmitted(question);
@@ -267,7 +259,9 @@ class _AIBotScreenState extends State<AIBotScreen> {
                         width: 80,
                         height: 80,
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1), // Adjust for black theme
+                          color: Colors.white.withOpacity(
+                            0.1,
+                          ), // Adjust for black theme
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -281,7 +275,8 @@ class _AIBotScreenState extends State<AIBotScreen> {
                         'Ask me anything about your subscriptions',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Colors.grey, // Adjust text color for dark theme
+                          color:
+                              Colors.grey, // Adjust text color for dark theme
                         ),
                       ),
                     ],
@@ -291,7 +286,8 @@ class _AIBotScreenState extends State<AIBotScreen> {
                   padding: const EdgeInsets.all(8.0),
                   reverse: true,
                   itemCount: _messages.length,
-                  itemBuilder: (_, int index) => _messages[_messages.length - index - 1],
+                  itemBuilder: (_, int index) =>
+                      _messages[_messages.length - index - 1],
                 ),
         ),
         const Divider(height: 1.0),
@@ -323,12 +319,17 @@ class _AIBotScreenState extends State<AIBotScreen> {
                 onSubmitted: _handleSubmitted,
                 decoration: const InputDecoration.collapsed(
                   hintText: 'Ask me anything...',
-                  hintStyle: TextStyle(color: Colors.white60), // Set hint text color
+                  hintStyle: TextStyle(
+                    color: Colors.white60,
+                  ), // Set hint text color
                 ),
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.send, color: Colors.white), // Set icon color to white
+              icon: const Icon(
+                Icons.send,
+                color: Colors.white,
+              ), // Set icon color to white
               onPressed: () => _handleSubmitted(_messageController.text),
             ),
           ],
@@ -342,11 +343,7 @@ class ChatMessage extends StatelessWidget {
   final String text;
   final bool isUser;
 
-  const ChatMessage({
-    super.key,
-    required this.text,
-    required this.isUser,
-  });
+  const ChatMessage({super.key, required this.text, required this.isUser});
 
   @override
   Widget build(BuildContext context) {
@@ -354,37 +351,42 @@ class ChatMessage extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 10.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment:
+            isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           if (!isUser) ...[
             Container(
               margin: const EdgeInsets.only(right: 16.0),
               child: CircleAvatar(
                 backgroundColor: Colors.blueAccent, // Change avatar color
-                child: const Icon(
-                  Icons.smart_toy,
-                  color: Colors.white,
-                ),
+                child: const Icon(Icons.smart_toy, color: Colors.white),
               ),
             ),
           ],
           Expanded(
             child: Column(
-              crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               children: [
                 Container(
                   margin: const EdgeInsets.only(top: 5.0),
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15.0,
+                    vertical: 10.0,
+                  ),
                   decoration: BoxDecoration(
                     color: isUser
                         ? Colors.blueAccent
-                        : Colors.grey[800], // Change message background for dark theme
+                        : Colors.grey[
+                            800], // Change message background for dark theme
                     borderRadius: BorderRadius.circular(15.0),
                   ),
                   child: Text(
                     text,
                     style: TextStyle(
-                      color: isUser ? Colors.white : Colors.white60, // Adjust text color
+                      color: isUser
+                          ? Colors.white
+                          : Colors.white60, // Adjust text color
                     ),
                   ),
                 ),
@@ -396,10 +398,7 @@ class ChatMessage extends StatelessWidget {
               margin: const EdgeInsets.only(left: 16.0),
               child: const CircleAvatar(
                 backgroundColor: Colors.grey,
-                child: Icon(
-                  Icons.person,
-                  color: Colors.white,
-                ),
+                child: Icon(Icons.person, color: Colors.white),
               ),
             ),
           ],

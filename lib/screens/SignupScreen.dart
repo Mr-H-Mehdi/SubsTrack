@@ -13,8 +13,12 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen>
     with SingleTickerProviderStateMixin {
+class _SignUpScreenState extends State<SignUpScreen>
+    with SingleTickerProviderStateMixin {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
@@ -22,10 +26,12 @@ class _SignUpScreenState extends State<SignUpScreen>
   String _passwordError = '';
   String _confirmPasswordError = '';
 
+
   // Animation controller
   late AnimationController _controller;
   late Animation<double> _fadeInAnimation;
   late Animation<Offset> _slideAnimation;
+
 
   // Additional animations for form elements
   late List<Animation<Offset>> _formFieldAnimations;
@@ -34,10 +40,12 @@ class _SignUpScreenState extends State<SignUpScreen>
   void initState() {
     super.initState();
 
+
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
+
 
     _fadeInAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
@@ -45,6 +53,7 @@ class _SignUpScreenState extends State<SignUpScreen>
         curve: const Interval(0.0, 0.6, curve: Curves.easeIn),
       ),
     );
+
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
@@ -55,6 +64,7 @@ class _SignUpScreenState extends State<SignUpScreen>
         curve: const Interval(0.2, 0.7, curve: Curves.easeOut),
       ),
     );
+
 
     // Animations for form fields with staggered effect
     _formFieldAnimations = List.generate(
@@ -73,6 +83,7 @@ class _SignUpScreenState extends State<SignUpScreen>
         ),
       ),
     );
+
 
     _controller.forward();
   }
@@ -164,12 +175,14 @@ class _SignUpScreenState extends State<SignUpScreen>
     }
   }
 
+
   void _animateButtonSuccess() {
     // Create a button press animation effect
     AnimationController buttonController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
+
 
     buttonController.forward().then((_) {
       buttonController.reverse().then((_) {
@@ -218,6 +231,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                     textAlign: TextAlign.center,
                   ),
                 ),
+
                 // Form fields with staggered slide animations
                 SlideTransition(
                   position: _formFieldAnimations[0],
@@ -229,6 +243,9 @@ class _SignUpScreenState extends State<SignUpScreen>
                         borderRadius: BorderRadius.circular(5),
                         boxShadow: [
                           BoxShadow(
+                            color: _emailError.isNotEmpty
+                                ? Colors.red.withOpacity(0.3)
+                                : Colors.transparent,
                             color: _emailError.isNotEmpty
                                 ? Colors.red.withOpacity(0.3)
                                 : Colors.transparent,
@@ -254,6 +271,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                     ),
                   ),
                 ),
+
                 SlideTransition(
                   position: _formFieldAnimations[1],
                   child: Padding(
@@ -264,6 +282,9 @@ class _SignUpScreenState extends State<SignUpScreen>
                         borderRadius: BorderRadius.circular(5),
                         boxShadow: [
                           BoxShadow(
+                            color: _passwordError.isNotEmpty
+                                ? Colors.red.withOpacity(0.3)
+                                : Colors.transparent,
                             color: _passwordError.isNotEmpty
                                 ? Colors.red.withOpacity(0.3)
                                 : Colors.transparent,
@@ -285,11 +306,14 @@ class _SignUpScreenState extends State<SignUpScreen>
                           prefixIcon: const Icon(Icons.lock),
                           errorText:
                               _passwordError.isEmpty ? null : _passwordError,
+                          errorText:
+                              _passwordError.isEmpty ? null : _passwordError,
                         ),
                       ),
                     ),
                   ),
                 ),
+
                 SlideTransition(
                   position: _formFieldAnimations[2],
                   child: Padding(
@@ -300,6 +324,9 @@ class _SignUpScreenState extends State<SignUpScreen>
                         borderRadius: BorderRadius.circular(5),
                         boxShadow: [
                           BoxShadow(
+                            color: _confirmPasswordError.isNotEmpty
+                                ? Colors.red.withOpacity(0.3)
+                                : Colors.transparent,
                             color: _confirmPasswordError.isNotEmpty
                                 ? Colors.red.withOpacity(0.3)
                                 : Colors.transparent,
@@ -322,11 +349,15 @@ class _SignUpScreenState extends State<SignUpScreen>
                           errorText: _confirmPasswordError.isEmpty
                               ? null
                               : _confirmPasswordError,
+                          errorText: _confirmPasswordError.isEmpty
+                              ? null
+                              : _confirmPasswordError,
                         ),
                       ),
                     ),
                   ),
                 ),
+
                 // Animated buttons
                 TweenAnimationBuilder<double>(
                   tween: Tween<double>(begin: 0.0, end: 1.0),
@@ -377,6 +408,11 @@ class _SignUpScreenState extends State<SignUpScreen>
                                     const LoginScreen(),
                             transitionsBuilder: (context, animation,
                                 secondaryAnimation, child) {
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) =>
+                                    const LoginScreen(),
+                            transitionsBuilder: (context, animation,
+                                secondaryAnimation, child) {
                               return SlideTransition(
                                 position: Tween<Offset>(
                                   begin: const Offset(0.0, 1.0),
@@ -385,6 +421,8 @@ class _SignUpScreenState extends State<SignUpScreen>
                                 child: child,
                               );
                             },
+                            transitionDuration:
+                                const Duration(milliseconds: 500),
                             transitionDuration:
                                 const Duration(milliseconds: 500),
                           ),
@@ -412,3 +450,4 @@ class _SignUpScreenState extends State<SignUpScreen>
     );
   }
 }
+

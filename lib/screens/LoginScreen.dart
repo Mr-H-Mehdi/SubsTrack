@@ -15,18 +15,19 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  // Setting some variables
   String _emailError = '';
   String _passwordError = '';
   bool showPw = false;
   bool checked = false;
-  
+
   // Animation controllers
   late AnimationController _formAnimationController;
   late AnimationController _logoAnimationController;
   late Animation<double> _logoAnimation;
   late Animation<Offset> _slideAnimation;
   late Animation<double> _fadeAnimation;
-  
+
   // Password visibility toggle animation
   late AnimationController _iconAnimationController;
   late Animation<double> _iconRotationAnimation;
@@ -34,37 +35,37 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
   @override
   void initState() {
     super.initState();
-    
+
     // Set the initial text
     emailController.text = "Example@email.com";
     passwordController.text = "Password@1";
-    
+
     // Form animation controller
     _formAnimationController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
-    
+
     // Logo animation controller
     _logoAnimationController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-    
+
     // Icon animation controller
     _iconAnimationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     // Define animations
     _logoAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
       CurvedAnimation(
-        parent: _logoAnimationController, 
+        parent: _logoAnimationController,
         curve: Curves.elasticOut,
       ),
     );
-    
+
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0.0, 0.3),
       end: Offset.zero,
@@ -74,16 +75,17 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
         curve: Curves.easeOut,
       ),
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _formAnimationController,
         curve: Curves.easeIn,
       ),
     );
-    
+
     _iconRotationAnimation = Tween<double>(begin: 0.0, end: 0.5).animate(_iconAnimationController);
-    
+        Tween<double>(begin: 0.0, end: 0.5).animate(_iconAnimationController);
+
     // Start animations
     _logoAnimationController.forward();
     _formAnimationController.forward();
@@ -145,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
 
     if (isValid) {
       ScaffoldMessenger.of(context).clearSnackBars();
-      
+
       // Animate the success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -164,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
           behavior: SnackBarBehavior.floating,
         ),
       );
-      
+
       // Navigate to profile screen with user data
       Navigator.of(context).push(
         PageRouteBuilder(
@@ -203,7 +205,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
       );
     } else {
       ScaffoldMessenger.of(context).clearSnackBars();
-      
+
       // Animate the error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -224,12 +226,12 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
       );
     }
   }
-  
+
   void _togglePasswordVisibility() {
     setState(() {
       showPw = !showPw;
     });
-    
+
     if (showPw) {
       _iconAnimationController.forward();
     } else {
@@ -270,6 +272,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
               ),
             ),
             // Animated form fields
+
             SlideTransition(
               position: _slideAnimation,
               child: FadeTransition(
@@ -277,6 +280,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                 child: Column(
                   children: [
                     // Email field with animation
+
                     Padding(
                       padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
                       child: AnimatedContainer(
@@ -284,7 +288,10 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
                           boxShadow: [
-                            BoxShadow(color: _emailError.isNotEmpty ? Colors.red.withOpacity(0.3) : Colors.transparent,
+                            BoxShadow(
+                              color: _emailError.isNotEmpty
+                                  ? Colors.red.withOpacity(0.3)
+                                  : Colors.transparent,
                               blurRadius: 8,
                               spreadRadius: 1,
                             ),
@@ -307,6 +314,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                       ),
                     ),
                     // Password field with animation
+
                     Padding(
                       padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
                       child: AnimatedContainer(
@@ -315,7 +323,9 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                           borderRadius: BorderRadius.circular(5),
                           boxShadow: [
                             BoxShadow(
-                              color: _passwordError.isNotEmpty ? Colors.red.withOpacity(0.3) : Colors.transparent,
+                              color: _passwordError.isNotEmpty
+                                  ? Colors.red.withOpacity(0.3)
+                                  : Colors.transparent,
                               blurRadius: 8,
                               spreadRadius: 1,
                             ),
@@ -340,29 +350,36 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                               child: IconButton(
                                 icon: AnimatedSwitcher(
                                   duration: const Duration(milliseconds: 300),
-                                  transitionBuilder: (Widget child, Animation<double> animation) {
-                                    return ScaleTransition(scale: animation, child: child);
+                                  transitionBuilder: (Widget child,
+                                      Animation<double> animation) {
+                                    return ScaleTransition(
+                                        scale: animation, child: child);
                                   },
                                   child: Icon(
-                                    showPw ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                                    showPw
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility_outlined,
                                     key: ValueKey<bool>(showPw),
                                   ),
                                 ),
                                 onPressed: _togglePasswordVisibility,
                               ),
                             ),
-                            errorText: _passwordError.isEmpty ? null : _passwordError,
+                            errorText:
+                                _passwordError.isEmpty ? null : _passwordError,
                           ),
                         ),
                       ),
                     ),
                     // Remember me and forgot password row with animations
+
                     FadeTransition(
                       opacity: _fadeAnimation,
                       child: Row(
                         children: [
                           const SizedBox(width: 12),
                           // Animated checkbox
+
                           TweenAnimationBuilder<double>(
                             tween: Tween<double>(begin: 0.0, end: 1.0),
                             duration: const Duration(milliseconds: 300),
@@ -386,6 +403,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                             style: TextStyle(color: Colors.grey, fontSize: 15),
                           ),
                           const Spacer(),
+
                           // Animated forgot password button
                           TweenAnimationBuilder<double>(
                             tween: Tween<double>(begin: 0.0, end: 1.0),
@@ -408,6 +426,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                         ],
                       ),
                     ),
+
                     // Login button with pulse animation
                     TweenAnimationBuilder<double>(
                       tween: Tween<double>(begin: 0.95, end: 1.0),
@@ -438,6 +457,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                       ),
                     ),
                     const SizedBox(height: 20),
+
                     // Sign up button with animation
                     TweenAnimationBuilder<double>(
                       tween: Tween<double>(begin: 0.8, end: 1.0),
@@ -455,8 +475,11 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                           onPressed: () {
                             Navigator.of(context).push(
                               PageRouteBuilder(
-                                pageBuilder: (context, animation, secondaryAnimation) => const SignUpScreen(),
-                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        const SignUpScreen(),
+                                transitionsBuilder: (context, animation,
+                                    secondaryAnimation, child) {
                                   return SlideTransition(
                                     position: Tween<Offset>(
                                       begin: const Offset(0.0, 1.0),
@@ -465,7 +488,8 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                                     child: child,
                                   );
                                 },
-                                transitionDuration: const Duration(milliseconds: 500),
+                                transitionDuration:
+                                    const Duration(milliseconds: 500),
                               ),
                             );
                           },
