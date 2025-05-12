@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:labs/models/UserData.dart';
 import 'dart:math' as math;
 
+import 'package:labs/screens/SplashScreen.dart';
+
 class SettingsScreen extends StatefulWidget {
   final UserData? userData;
 
@@ -308,7 +310,14 @@ class _SettingsScreenState extends State<SettingsScreen>
 
                     print('User signed out');
                     // You can navigate the user to a login screen or show a message
-                    Navigator.pushReplacementNamed(context, '/login');
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Splashscreen(
+                          onAnimationComplete: () {},
+                        ),
+                      ),
+                    );
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Logged out successfully'),

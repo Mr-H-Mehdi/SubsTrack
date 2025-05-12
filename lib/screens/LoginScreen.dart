@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:labs/main.dart';
 import 'package:labs/screens/HomeScreen.dart';
 import 'package:labs/screens/ProfileScreen.dart';
 import 'package:labs/screens/SignupScreen.dart';
@@ -11,7 +13,8 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin {
+class _LoginScreenState extends State<LoginScreen>
+    with TickerProviderStateMixin {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -37,8 +40,8 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
     super.initState();
 
     // Set the initial text
-    emailController.text = "Example@email.com";
-    passwordController.text = "Password@1";
+    emailController.text = "";
+    passwordController.text = "";
 
     // Form animation controller
     _formAnimationController = AnimationController(
@@ -83,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
       ),
     );
 
-    _iconRotationAnimation = Tween<double>(begin: 0.0, end: 0.5).animate(_iconAnimationController);
+    _iconRotationAnimation =
         Tween<double>(begin: 0.0, end: 0.5).animate(_iconAnimationController);
 
     // Start animations
@@ -102,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
   }
 
   // Function to validate the login form
-  void _submitForm() {
+  Future<void> _submitForm() async {
     setState(() {
       _emailError = '';
       _passwordError = '';
@@ -146,63 +149,105 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
     }
 
     if (isValid) {
-      ScaffoldMessenger.of(context).clearSnackBars();
+      try {
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
 
-      // Animate the success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: TweenAnimationBuilder<double>(
-            tween: Tween<double>(begin: 0.0, end: 1.0),
-            duration: const Duration(milliseconds: 400),
-            builder: (context, value, child) {
-              return Opacity(
-                opacity: value,
-                child: child,
-              );
-            },
-            child: const Text('Login Successful'),
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
+        );
+
+        ScaffoldMessenger.of(context).clearSnackBars();
+
+        // Animate the success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: TweenAnimationBuilder<double>(
+              tween: Tween<double>(begin: 0.0, end: 1.0),
+              duration: const Duration(milliseconds: 400),
+              builder: (context, value, child) {
+                return Opacity(
+                  opacity: value,
+                  child: child,
+                );
+              },
+              child: const Text('Login Successful'),
+            ),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
           ),
-          backgroundColor: Colors.green,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+        );
+
+        // Navigate to another screen or do something else
+      } on FirebaseAuthException catch (e) {
+        String errorMessage;
+
+        switch (e.code) {
+          case 'invalid-email':
+            errorMessage = 'The email address is not valid.';
+            break;
+          case 'user-disabled':
+            errorMessage = 'This user has been disabled.';
+            break;
+          case 'user-not-found':
+            errorMessage = 'No user found with this email.';
+            break;
+          case 'wrong-password':
+            errorMessage = 'Incorrect password.';
+            break;
+          default:
+            errorMessage = 'Login failed. Please try again.';
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(errorMessage)),
+        );
+      } catch (e) {
+        // Handle unexpected errors
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('An unexpected error occurred.')),
+        );
+      }
 
       // Navigate to profile screen with user data
-      Navigator.of(context).push(
-        PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) {
-            // return ProfileScreen(
-            //   userData: UserData(
-            //     name: "Mr. John Smith",
-            //     email: email,
-            //     phone: "+923456789012",
-            //     address: "Beruni Hostel NUST, Sector-H12, Islamabad Pk.",
-            //     biometric: checked,
-            //     imageName: "assets/images/ManPic.jpeg",
-            //   ),
-            return const HomeScreen();
-          },
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            // Custom transition
-            return FadeTransition(
-              opacity: animation,
-              child: SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0.0, 0.3),
-                  end: Offset.zero,
-                ).animate(
-                  CurvedAnimation(
-                    parent: animation,
-                    curve: Curves.easeOutCubic,
-                  ),
-                ),
-                child: child,
-              ),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 800),
-        ),
-      );
+      // Navigator.of(context).push(
+      //   PageRouteBuilder(
+      //     pageBuilder: (context, animation, secondaryAnimation) {
+      //       // return ProfileScreen(
+      //       //   userData: UserData(
+      //       //     name: "Mr. John Smith",
+      //       //     email: email,
+      //       //     phone: "+923456789012",
+      //       //     address: "Beruni Hostel NUST, Sector-H12, Islamabad Pk.",
+      //       //     biometric: checked,
+      //       //     imageName: "assets/images/ManPic.jpeg",
+      //       //   ),
+      //       return const HomeScreen();
+      //     },
+      //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      //       // Custom transition
+      //       return FadeTransition(
+      //         opacity: animation,
+      //         child: SlideTransition(
+      //           position: Tween<Offset>(
+      //             begin: const Offset(0.0, 0.3),
+      //             end: Offset.zero,
+      //           ).animate(
+      //             CurvedAnimation(
+      //               parent: animation,
+      //               curve: Curves.easeOutCubic,
+      //             ),
+      //           ),
+      //           child: child,
+      //         ),
+      //       );
+      //     },
+      //     transitionDuration: const Duration(milliseconds: 800),
+      //   ),
+      // );
     } else {
       ScaffoldMessenger.of(context).clearSnackBars();
 
@@ -509,15 +554,15 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                     ),
                     const SizedBox(height: 20),
                     // Hint text with animation
-                    AnimatedOpacity(
-                      opacity: 1.0,
-                      duration: const Duration(milliseconds: 1500),
-                      curve: Curves.easeIn,
-                      child: const Text(
-                        "(Hint: Login with any valid email/password combination.)",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
+                    // AnimatedOpacity(
+                    //   opacity: 1.0,
+                    //   duration: const Duration(milliseconds: 1500),
+                    //   curve: Curves.easeIn,
+                    //   child: const Text(
+                    //     "(Hint: Login with any valid email/password combination.)",
+                    //     style: TextStyle(color: Colors.white),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
