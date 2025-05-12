@@ -18,13 +18,20 @@ class _CalendarScreenState extends State<CalendarScreen> {
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
-    
+
     // Setup sample events
     final today = DateTime.now();
-    _events[DateTime(today.year, today.month, today.day)] = ['Netflix', 'Spotify'];
-    _events[DateTime(today.year, today.month, today.day + 5)] = ['YouTube Premium'];
+    _events[DateTime(today.year, today.month, today.day)] = [
+      'Netflix',
+      'Spotify'
+    ];
+    _events[DateTime(today.year, today.month, today.day + 5)] = [
+      'YouTube Premium'
+    ];
     _events[DateTime(today.year, today.month, today.day + 10)] = ['iCloud'];
-    _events[DateTime(today.year, today.month, today.day + 15)] = ['Amazon Prime'];
+    _events[DateTime(today.year, today.month, today.day + 15)] = [
+      'Amazon Prime'
+    ];
   }
 
   List<String> _getEventsForDay(DateTime day) {
@@ -34,7 +41,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     final todayEvents = _getEventsForDay(DateTime.now());
-    
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -75,7 +82,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            
+
             // Calendar
             TableCalendar(
               firstDay: DateTime.utc(2020, 1, 1),
@@ -167,7 +174,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             ),
 
             const SizedBox(height: 20),
-            
+
             // Month summary
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -193,9 +200,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 10),
-            
+
             // Due subscriptions list
             Expanded(
               child: ListView(
@@ -203,7 +210,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 children: [
                   _buildDueSubscription('Netflix', '\$15.99', '26/05/2025'),
                   _buildDueSubscription('Spotify', '\$9.99', '15/05/2025'),
-                  _buildDueSubscription('YouTube Premium', '\$11.99', '30/05/2025'),
+                  _buildDueSubscription(
+                      'YouTube Premium', '\$11.99', '30/05/2025'),
                   _buildDueSubscription('iCloud', '\$2.99', '22/05/2025'),
                 ],
               ),
@@ -213,15 +221,25 @@ class _CalendarScreenState extends State<CalendarScreen> {
       ),
     );
   }
-  
+
   String _getMonthName(int month) {
     const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
     ];
     return months[month - 1];
   }
-  
+
   Widget _buildDueSubscription(String name, String price, String date) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
