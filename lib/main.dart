@@ -55,8 +55,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF7165E3),
-          primary: const Color(0xFF7165E3),
+          seedColor: const Color.fromARGB(255, 19, 98, 44),
+          primary: const Color.fromARGB(255, 19, 98, 44),
         ),
         fontFamily: 'Poppins',
         useMaterial3: true,
@@ -98,6 +98,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.black,
+        
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

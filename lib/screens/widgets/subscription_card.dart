@@ -24,8 +24,12 @@ class SubscriptionCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.black,
         borderRadius: BorderRadius.circular(15),
+        border: Border.all(
+          color: Colors.grey.withOpacity(0.3),
+          width: 2,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -61,6 +65,7 @@ class SubscriptionCard extends StatelessWidget {
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
+                    color: Colors.white,
                   ),
                 ),
                 Text(

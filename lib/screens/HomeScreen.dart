@@ -83,16 +83,28 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                     ),
                     // Inner text
+
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          'Budget Tracker',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image(
+                              height: 32,
+                              width: 32,
+                              image: AssetImage("assets/images/AppLogo.png"),
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              'SubsTrack',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(height: 5),
                         Text(
@@ -123,10 +135,10 @@ class _HomeScreenState extends State<HomeScreen>
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Row(
                 children: [
-                  _buildCardCategory('Active Subscriptions', '12', Colors.blue),
                   _buildCardCategory(
-                      'Highest Priced', '\$15.99', Colors.orange),
-                  _buildCardCategory('Lowest Priced', '\$4.99', Colors.green),
+                      'Active Subscriptions', '12', Colors.white),
+                  _buildCardCategory('Highest Priced', '\$15.99', Colors.white),
+                  _buildCardCategory('Lowest Priced', '\$4.99', Colors.white),
                 ],
               ),
             ),
@@ -134,20 +146,26 @@ class _HomeScreenState extends State<HomeScreen>
             // Tab Bar
             Padding(
               padding: const EdgeInsets.all(5),
+              
               child: Container(
+                margin: const EdgeInsets.only(bottom: 8),
                 height: 50,
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
+                  border: Border.all(
+                    color: Colors.grey[600]!,
+                    width: 1,
+                  ),
+                  color: Colors.grey[800],
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: TabBar(
                   controller: _tabController,
-                  indicator: (BoxDecoration(
+                  indicator: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color: Theme.of(context).colorScheme.primary,
-                  )),
+                    color: Colors.grey[700],
+                  ),
                   labelColor: Colors.white,
-                  unselectedLabelColor: Colors.black,
+                  unselectedLabelColor: Colors.grey[400],
                   tabs: const [
                     Tab(
                       // text: "",
@@ -245,11 +263,15 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _buildCardCategory(String title, String value, Color color) {
     return Container(
-      width: 150,
-      margin: const EdgeInsets.only(right: 10),
+      width: 140,
+      margin: const EdgeInsets.only(right: 10, bottom: 8),
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        border: Border.all(
+          color: color.withOpacity(0.3),
+          width: 1,
+        ),
+        color: color.withOpacity(0.3),
         borderRadius: BorderRadius.circular(15),
       ),
       child: Column(
@@ -258,8 +280,9 @@ class _HomeScreenState extends State<HomeScreen>
           Text(
             title,
             style: const TextStyle(
+              color: Colors.white,
               fontWeight: FontWeight.w500,
-              fontSize: 14,
+              fontSize: 10,
             ),
           ),
           const SizedBox(height: 5),
@@ -268,7 +291,7 @@ class _HomeScreenState extends State<HomeScreen>
             style: TextStyle(
               color: color,
               fontWeight: FontWeight.bold,
-              fontSize: 24,
+              fontSize: 16,
             ),
           ),
         ],
