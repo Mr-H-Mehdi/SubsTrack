@@ -60,11 +60,12 @@ class _AIBotScreenState extends State<AIBotScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black, // Set the background to black
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.settings),
+          icon: const Icon(Icons.settings, color: Colors.white), // Change icon color to white
           onPressed: () {
             Navigator.push(
               context,
@@ -74,7 +75,7 @@ class _AIBotScreenState extends State<AIBotScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back, color: Colors.white), // Change icon color to white
             onPressed: () {
               if (_showCustomChat) {
                 setState(() {
@@ -88,6 +89,7 @@ class _AIBotScreenState extends State<AIBotScreen> {
           'AI Assistant',
           style: TextStyle(
             fontWeight: FontWeight.bold,
+            color: Colors.white, // Set text color to white
           ),
         ),
         centerTitle: true,
@@ -108,13 +110,13 @@ class _AIBotScreenState extends State<AIBotScreen> {
           width: 80,
           height: 80,
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+            color: Colors.white.withOpacity(0.1), // Adjust for black theme
             shape: BoxShape.circle,
           ),
           child: Icon(
             Icons.smart_toy,
             size: 40,
-            color: Theme.of(context).colorScheme.primary,
+            color: Theme.of(context).colorScheme.primary, // Change icon color to white
           ),
         ),
         
@@ -125,6 +127,7 @@ class _AIBotScreenState extends State<AIBotScreen> {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
+            color: Colors.white, // Set text color to white
           ),
         ),
         
@@ -133,7 +136,7 @@ class _AIBotScreenState extends State<AIBotScreen> {
         Text(
           'Ask me anything about your subscriptions',
           style: TextStyle(
-            color: Colors.grey[600],
+            color: Colors.grey[400], // Adjust text color for dark theme
           ),
         ),
         
@@ -175,7 +178,7 @@ class _AIBotScreenState extends State<AIBotScreen> {
                 });
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary,
+                backgroundColor: Theme.of(context).colorScheme.primary, // Change button color
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -213,7 +216,7 @@ class _AIBotScreenState extends State<AIBotScreen> {
         child: Container(
           padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Colors.grey[800], // Adjust for black theme
             borderRadius: BorderRadius.circular(15),
             boxShadow: [
               BoxShadow(
@@ -227,7 +230,7 @@ class _AIBotScreenState extends State<AIBotScreen> {
             children: [
               Icon(
                 icon,
-                color: Theme.of(context).colorScheme.primary,
+                color: Colors.white, // Change icon color to white
               ),
               const SizedBox(width: 15),
               Expanded(
@@ -235,13 +238,14 @@ class _AIBotScreenState extends State<AIBotScreen> {
                   question,
                   style: const TextStyle(
                     fontWeight: FontWeight.w500,
+                    color: Colors.white, // Set text color to white
                   ),
                 ),
               ),
               const Icon(
                 Icons.arrow_forward_ios,
                 size: 16,
-                color: Colors.grey,
+                color: Colors.white, // Change icon color to white
               ),
             ],
           ),
@@ -263,13 +267,13 @@ class _AIBotScreenState extends State<AIBotScreen> {
                         width: 80,
                         height: 80,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                          color: Colors.white.withOpacity(0.1), // Adjust for black theme
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           Icons.smart_toy,
                           size: 40,
-                          color: Theme.of(context).colorScheme.primary,
+                          color: Colors.white, // Change icon color to white
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -277,7 +281,7 @@ class _AIBotScreenState extends State<AIBotScreen> {
                         'Ask me anything about your subscriptions',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Colors.grey,
+                          color: Colors.grey, // Adjust text color for dark theme
                         ),
                       ),
                     ],
@@ -293,7 +297,7 @@ class _AIBotScreenState extends State<AIBotScreen> {
         const Divider(height: 1.0),
         Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
+            color: Colors.black, // Set background color to black
           ),
           child: _buildTextComposer(),
         ),
@@ -303,12 +307,12 @@ class _AIBotScreenState extends State<AIBotScreen> {
 
   Widget _buildTextComposer() {
     return IconTheme(
-      data: IconThemeData(color: Theme.of(context).colorScheme.primary),
+      data: IconThemeData(color: Colors.white), // Set icon color to white
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         decoration: BoxDecoration(
-          color: Colors.grey[200],
+          color: Colors.grey[700], // Set input field background to dark gray
           borderRadius: BorderRadius.circular(25.0),
         ),
         child: Row(
@@ -319,11 +323,12 @@ class _AIBotScreenState extends State<AIBotScreen> {
                 onSubmitted: _handleSubmitted,
                 decoration: const InputDecoration.collapsed(
                   hintText: 'Ask me anything...',
+                  hintStyle: TextStyle(color: Colors.white60), // Set hint text color
                 ),
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.send),
+              icon: const Icon(Icons.send, color: Colors.white), // Set icon color to white
               onPressed: () => _handleSubmitted(_messageController.text),
             ),
           ],
@@ -355,7 +360,7 @@ class ChatMessage extends StatelessWidget {
             Container(
               margin: const EdgeInsets.only(right: 16.0),
               child: CircleAvatar(
-                backgroundColor: Theme.of(context).colorScheme.primary,
+                backgroundColor: Colors.blueAccent, // Change avatar color
                 child: const Icon(
                   Icons.smart_toy,
                   color: Colors.white,
@@ -372,14 +377,14 @@ class ChatMessage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                   decoration: BoxDecoration(
                     color: isUser
-                        ? Theme.of(context).colorScheme.primary
-                        : Colors.grey[200],
+                        ? Colors.blueAccent
+                        : Colors.grey[800], // Change message background for dark theme
                     borderRadius: BorderRadius.circular(15.0),
                   ),
                   child: Text(
                     text,
                     style: TextStyle(
-                      color: isUser ? Colors.white : Colors.black,
+                      color: isUser ? Colors.white : Colors.white60, // Adjust text color
                     ),
                   ),
                 ),

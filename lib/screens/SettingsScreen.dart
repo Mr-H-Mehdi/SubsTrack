@@ -1,11 +1,88 @@
 import 'package:flutter/material.dart';
+import 'package:labs/models/UserData.dart';
+import 'dart:math' as math;
 
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
+class SettingsScreen extends StatefulWidget {
+  final UserData? userData;
+
+  const SettingsScreen({super.key, this.userData});
+
+  @override
+  _SettingsScreenState createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen>
+    with SingleTickerProviderStateMixin {
+  bool checked = false;
+  late String name;
+  late String email;
+  late String phone;
+  late String address;
+  late String imageName;
+
+  // Animation controllers
+  late AnimationController _controller;
+  late Animation<double> _profileImageAnimation;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize with data from userData or use defaults
+    if (widget.userData != null) {
+      name = widget.userData!.name;
+      email = widget.userData!.email;
+      phone = widget.userData!.phone;
+      address = widget.userData!.address;
+      checked = widget.userData!.biometric;
+      imageName = widget.userData!.imageName;
+    } else {
+      // Default values if no data is passed
+      name = "John Doe";
+      email = "john.doe@example.com";
+      phone = "+1234567890";
+      address = "123 Main St, City";
+      checked = false;
+      imageName = "assets/images/ManPic.jpeg";
+    }
+
+    // Initialize animation controller
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+
+    // Profile image animation
+    _profileImageAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.0, 0.6, curve: Curves.elasticOut),
+      ),
+    );
+
+    // Fade animation
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.2, 0.8, curve: Curves.easeIn),
+      ),
+    );
+
+    // Start animations
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -13,57 +90,94 @@ class SettingsScreen extends StatelessWidget {
           'Settings',
           style: TextStyle(
             fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-        ],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            // Profile Photo
-            Center(
-              child: Column(
-                children: [
-                  Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                      image: const DecorationImage(
-                        image: NetworkImage('https://via.placeholder.com/100'),
-                        fit: BoxFit.cover,
-                      ),
+            // Profile Photo with Animation
+            AnimatedBuilder(
+              animation: _profileImageAnimation,
+              builder: (context, child) {
+                return Transform.scale(
+                  scale: _profileImageAnimation.value,
+                  child: Center(
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundImage: AssetImage(imageName),
+                        ),
+                        const SizedBox(height: 10),
+                        FadeTransition(
+                          opacity: _fadeAnimation,
+                          child: Text(
+                            name,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        FadeTransition(
+                          opacity: _fadeAnimation,
+                          child: Text(
+                            email,
+                            style: TextStyle(
+                              color: Colors.grey[400],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'John Doe',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    'john.doe@example.com',
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
-              ),
+                );
+              },
             ),
             
             const SizedBox(height: 30),
+            
+            // Personal Information Section
+            _buildSettingsSection(
+              context,
+              'Personal Information',
+              [
+                _buildInfoRow(Icons.phone, "Phone Number", phone),
+                _buildInfoRow(Icons.email, "Email", email),
+                _buildInfoRow(Icons.pin_drop, "Address", address),
+                _buildSettingItem(
+                  context,
+                  'Biometric Authentication',
+                  Icons.fingerprint,
+                  Colors.green,
+                  () {},
+                  trailing: Switch(
+                    value: checked,
+                    onChanged: (value) {
+                      setState(() {
+                        checked = value;
+                      });
+                    },
+                    thumbColor: MaterialStateProperty.all(Colors.white),
+                    activeTrackColor: Colors.green,
+                    inactiveTrackColor: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+            
+            const SizedBox(height: 20),
             
             // General Settings
             _buildSettingsSection(
@@ -79,7 +193,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 _buildSettingItem(
                   context,
-                  'iCloud Sync',
+                  'Cloud Sync',
                   Icons.cloud,
                   Colors.blue,
                   () {},
@@ -96,7 +210,7 @@ class SettingsScreen extends StatelessWidget {
             
             const SizedBox(height: 20),
             
-            // My Subscription Settings
+            // Subscription Settings
             _buildSettingsSection(
               context,
               'My Subscription',
@@ -223,11 +337,11 @@ class SettingsScreen extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.grey[900],
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withOpacity(0.2),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -238,9 +352,10 @@ class SettingsScreen extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
+              color: Colors.grey[300],
             ),
           ),
           const SizedBox(height: 15),
@@ -255,8 +370,9 @@ class SettingsScreen extends StatelessWidget {
     String title,
     IconData icon,
     Color color,
-    VoidCallback onTap,
-  ) {
+    VoidCallback onTap, {
+    Widget? trailing,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(10),
@@ -281,16 +397,55 @@ class SettingsScreen extends StatelessWidget {
               title,
               style: const TextStyle(
                 fontWeight: FontWeight.w500,
+                color: Colors.white,
               ),
             ),
             const Spacer(),
-            const Icon(
+            trailing ?? const Icon(
               Icons.arrow_forward_ios,
               size: 16,
               color: Colors.grey,
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(IconData icon, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.green.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              icon,
+              size: 20,
+              color: Colors.green,
+            ),
+          ),
+          const SizedBox(width: 15),
+          Text(
+            label,
+            style: const TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
+            ),
+          ),
+          const Spacer(),
+          Text(
+            value,
+            style: TextStyle(
+              color: Colors.grey[400],
+            ),
+          ),
+          const SizedBox(width: 10),
+        ],
       ),
     );
   }

@@ -36,11 +36,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final todayEvents = _getEventsForDay(DateTime.now());
     
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.settings),
+          icon: const Icon(Icons.settings, color: Colors.white),
           onPressed: () {
             Navigator.push(
               context,
@@ -50,7 +51,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {},
           ),
         ],
@@ -67,6 +68,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
                 ],
@@ -94,18 +96,43 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 _focusedDay = focusedDay;
               },
               calendarStyle: CalendarStyle(
+                defaultTextStyle: const TextStyle(color: Colors.white),
+                weekendTextStyle: const TextStyle(color: Colors.white),
+                holidayTextStyle: const TextStyle(color: Colors.white),
+                outsideTextStyle: TextStyle(color: Colors.grey[600]),
+                disabledTextStyle: TextStyle(color: Colors.grey[800]),
+                todayTextStyle: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+                selectedTextStyle: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
                 markersMaxCount: 3,
-                markerDecoration: const BoxDecoration(
-                  color: Colors.red,
+                markerDecoration: BoxDecoration(
+                  color: Colors.red[400],
                   shape: BoxShape.circle,
                 ),
                 selectedDecoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Colors.green[400],
                   shape: BoxShape.circle,
                 ),
                 todayDecoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+                  color: Colors.green[200],
                   shape: BoxShape.circle,
+                ),
+                outsideDaysVisible: false,
+                defaultDecoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.grey[900],
+                ),
+                weekendDecoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.grey[900],
+                ),
+                rowDecoration: BoxDecoration(
+                  color: Colors.grey[900],
                 ),
               ),
               headerStyle: HeaderStyle(
@@ -114,14 +141,27 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 titleTextStyle: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
-                leftChevronIcon: Icon(
+                leftChevronIcon: const Icon(
                   Icons.chevron_left,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Colors.white,
                 ),
-                rightChevronIcon: Icon(
+                rightChevronIcon: const Icon(
                   Icons.chevron_right,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Colors.white,
+                ),
+                headerPadding: const EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.grey[900],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              daysOfWeekStyle: DaysOfWeekStyle(
+                weekdayStyle: const TextStyle(color: Colors.white),
+                weekendStyle: const TextStyle(color: Colors.white),
+                decoration: BoxDecoration(
+                  color: Colors.grey[900],
                 ),
               ),
             ),
@@ -139,14 +179,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
-                  const Text(
+                  Text(
                     'Total: \$43.96',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.red,
+                      color: Colors.red[400],
                     ),
                   ),
                 ],
@@ -186,11 +227,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.grey[900],
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withOpacity(0.2),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -203,6 +244,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             name,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
           Column(
@@ -210,16 +252,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
             children: [
               Text(
                 price,
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.red,
+                  color: Colors.red[400],
                 ),
               ),
               Text(
                 date,
                 style: TextStyle(
                   fontSize: 12,
-                  color: Colors.grey[600],
+                  color: Colors.grey[400],
                 ),
               ),
             ],
