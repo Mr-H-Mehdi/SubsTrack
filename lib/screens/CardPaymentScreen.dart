@@ -56,8 +56,9 @@ class CardPaymentScreen extends StatelessWidget {
             
             // No cards text
             const Text(
-              'No Payment Methods',
+              'Payment Methods',
               style: TextStyle(
+                color: Colors.white,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
